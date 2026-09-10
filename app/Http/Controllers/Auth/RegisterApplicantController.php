@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterApplicantRequest;
 use App\Models\AccountUser;
+use App\Notifications\ApplicantRegistered;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
@@ -16,7 +17,7 @@ class RegisterApplicantController extends Controller
         $data = $request->validated();
 
         try {
-            AccountUser::create([
+            $account = AccountUser::create([
                 'name' => $data['username'],
                 'email' => $data['email'],
                 'password' => $data['password'],
@@ -28,6 +29,12 @@ class RegisterApplicantController extends Controller
             }
 
             throw ValidationException::withMessages(['email' => 'Email đã được sử dụng.']);
+        }
+
+        try {
+            $account->notify(new ApplicantRegistered);
+        } catch (\Throwable $exception) {
+            report($exception);
         }
 
         return response()->json([
