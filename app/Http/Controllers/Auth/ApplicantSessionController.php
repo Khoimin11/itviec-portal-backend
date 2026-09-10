@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class ApplicantSessionController extends Controller
 {
@@ -46,6 +47,22 @@ class ApplicantSessionController extends Controller
             'isSuccess' => true,
             'message' => '',
             'data' => new AccountUserResource($this->account($request)),
+        ]);
+    }
+
+    public function destroy(Request $request): JsonResponse
+    {
+        $token = $this->account($request)->currentAccessToken();
+        if ($token instanceof PersonalAccessToken) {
+            $token->delete();
+        } else {
+            abort(401);
+        }
+
+        return response()->json([
+            'isSuccess' => true,
+            'message' => 'Đăng xuất thành công',
+            'data' => null,
         ]);
     }
 

@@ -17,5 +17,6 @@ Route::post('/auth/login', [ApplicantSessionController::class, 'store'])
     ->middleware('throttle:5,1')->name('auth.login');
 
 Route::middleware('auth:sanctum')->group(function (): void {
+    Route::post('/auth/logout', [ApplicantSessionController::class, 'destroy'])->name('auth.logout');
     Route::get('/auth/account', [ApplicantSessionController::class, 'show'])->name('auth.account');
 });
