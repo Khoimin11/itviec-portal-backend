@@ -62,7 +62,10 @@ class ApplicantSessionController extends Controller
 
     public function destroy(Request $request): JsonResponse
     {
-        $token = $this->account($request)->currentAccessToken();
+        $account = $request->user();
+        abort_unless($account instanceof AccountUser || $account instanceof AccountCompanyInfo, 403);
+
+        $token = $account->currentAccessToken();
         if ($token instanceof PersonalAccessToken) {
             $token->delete();
         } else {
