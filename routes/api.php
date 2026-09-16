@@ -33,6 +33,7 @@ Route::post('/auth/login-company', LoginCompanyController::class)
 
 Route::middleware('auth:sanctum')->group(function (): void {
     Route::get('/company/profile', [CompanyProfileController::class, 'show']);
+    Route::put('/company/profile', [CompanyProfileController::class, 'update']);
 });
 
 Route::get('/industry', [CompanyCatalogController::class, 'industries']);
