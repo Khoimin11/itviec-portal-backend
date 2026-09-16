@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginApplicantRequest;
+use App\Http\Resources\AccountCompanyResource;
 use App\Http\Resources\AccountUserResource;
+use App\Models\AccountCompanyInfo;
 use App\Models\AccountUser;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -43,10 +45,18 @@ class ApplicantSessionController extends Controller
 
     public function show(Request $request): JsonResponse
     {
+        $account = $request->user();
+        if ($account instanceof AccountCompanyInfo) {
+            abort_unless($account->status === 'active', 403);
+            $resource = new AccountCompanyResource($account);
+        } else {
+            $resource = new AccountUserResource($this->account($request));
+        }
+
         return response()->json([
             'isSuccess' => true,
             'message' => '',
-            'data' => new AccountUserResource($this->account($request)),
+            'data' => $resource,
         ]);
     }
 

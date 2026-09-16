@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\ApplicantSessionController;
+use App\Http\Controllers\Auth\LoginCompanyController;
 use App\Http\Controllers\Auth\RegisterApplicantController;
 use App\Http\Controllers\Auth\RegisterCompanyController;
 use Illuminate\Http\Request;
@@ -24,3 +25,6 @@ Route::middleware('auth:sanctum')->group(function (): void {
 
 Route::post('/auth/register-company', RegisterCompanyController::class)
     ->middleware('throttle:5,1,company-register')->name('auth.register-company');
+
+Route::post('/auth/login-company', LoginCompanyController::class)
+    ->middleware('throttle:5,1,company-login')->name('auth.login-company');
