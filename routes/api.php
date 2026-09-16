@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\ApplicantSessionController;
 use App\Http\Controllers\Auth\RegisterApplicantController;
+use App\Http\Controllers\Auth\RegisterCompanyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,3 +21,6 @@ Route::middleware('auth:sanctum')->group(function (): void {
     Route::post('/auth/logout', [ApplicantSessionController::class, 'destroy'])->name('auth.logout');
     Route::get('/auth/account', [ApplicantSessionController::class, 'show'])->name('auth.account');
 });
+
+Route::post('/auth/register-company', RegisterCompanyController::class)
+    ->middleware('throttle:5,1,company-register')->name('auth.register-company');
