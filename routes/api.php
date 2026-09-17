@@ -10,6 +10,7 @@ use App\Http\Controllers\CompanyJobPostingController;
 use App\Http\Controllers\CompanyProfileController;
 use App\Http\Controllers\PublicCompanyController;
 use App\Http\Controllers\PublicJobPostingController;
+use App\Http\Controllers\StoreJobApplicationController;
 use App\Http\Controllers\StoreJobPostingController;
 use App\Http\Controllers\TopEmployerController;
 use Illuminate\Http\Request;
@@ -54,3 +55,6 @@ Route::get('/company/top-employers', TopEmployerController::class);
 Route::get('/company/{slug}', PublicCompanyController::class)->where('slug', '[a-z0-9-]+');
 
 Route::get('/job/{job}', PublicJobPostingController::class)->whereNumber('job');
+
+Route::post('/application/{job}', StoreJobApplicationController::class)
+    ->whereNumber('job')->middleware(['auth:sanctum', 'throttle:5,1']);
