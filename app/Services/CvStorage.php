@@ -34,6 +34,15 @@ class CvStorage
         return $publicId;
     }
 
+    public function temporaryUrl(string $publicId): string
+    {
+        return $this->endpoint('download').'?'.http_build_query($this->signed([
+            'public_id' => $publicId,
+            'attachment' => 'false',
+            'expires_at' => (string) now()->addMinutes(10)->timestamp,
+        ]), '', '&', PHP_QUERY_RFC3986);
+    }
+
     public function delete(string $publicId): void
     {
         try {

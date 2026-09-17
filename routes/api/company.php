@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('company')->group(function (): void {
     Route::put('/password', [CompanyAuthController::class, 'changePassword'])->middleware('throttle:5,1');
+    Route::get('/applications/{application}', [JobApplicationController::class, 'show'])->whereNumber('application');
     Route::get('/all-cv', [JobApplicationController::class, 'index']);
     Route::get('/all-job', [JobPostingController::class, 'index']);
     Route::get('/profile', [CompanyProfileController::class, 'show']);
