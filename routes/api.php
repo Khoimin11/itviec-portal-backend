@@ -9,6 +9,7 @@ use App\Http\Controllers\CompanyCatalogController;
 use App\Http\Controllers\CompanyJobPostingController;
 use App\Http\Controllers\CompanyProfileController;
 use App\Http\Controllers\StoreJobPostingController;
+use App\Http\Controllers\TopEmployerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -45,3 +46,5 @@ Route::get('/industry', [CompanyCatalogController::class, 'industries']);
 Route::get('/skill', [CompanyCatalogController::class, 'skills']);
 
 Route::post('/job', StoreJobPostingController::class)->middleware(['auth:sanctum', 'throttle:10,1']);
+
+Route::get('/company/top-employers', TopEmployerController::class);

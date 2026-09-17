@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -17,6 +18,11 @@ class AccountCompanyInfo extends Authenticatable
     use HasApiTokens, Notifiable;
 
     protected $table = 'accounts_company_info';
+
+    public function jobPostings(): HasMany
+    {
+        return $this->hasMany(JobPosting::class, 'company_id');
+    }
 
     public function industry(): BelongsTo
     {
