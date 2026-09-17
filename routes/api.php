@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\ApplicantSessionController;
+use App\Http\Controllers\Auth\ChangeCompanyPasswordController;
 use App\Http\Controllers\Auth\LoginCompanyController;
 use App\Http\Controllers\Auth\RegisterApplicantController;
 use App\Http\Controllers\Auth\RegisterCompanyController;
@@ -32,6 +33,7 @@ Route::post('/auth/login-company', LoginCompanyController::class)
     ->middleware('throttle:5,1,company-login')->name('auth.login-company');
 
 Route::middleware('auth:sanctum')->group(function (): void {
+    Route::put('/company/password', ChangeCompanyPasswordController::class)->middleware('throttle:5,1');
     Route::get('/company/profile', [CompanyProfileController::class, 'show']);
     Route::put('/company/profile', [CompanyProfileController::class, 'update']);
 });
