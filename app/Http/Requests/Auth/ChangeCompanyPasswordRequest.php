@@ -2,17 +2,11 @@
 
 namespace App\Http\Requests\Auth;
 
-use App\Models\AccountCompanyInfo;
 use Closure;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ChangeCompanyPasswordRequest extends FormRequest
 {
-    public function authorize(): bool
-    {
-        return $this->user() instanceof AccountCompanyInfo && $this->user()->status === 'active';
-    }
-
     public function rules(): array
     {
         $byteLimit = function (string $attribute, mixed $value, Closure $fail): void {

@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Applicant;
 
-use App\Http\Requests\StoreJobApplicationRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Applicant\StoreJobApplicationRequest;
 use App\Models\JobApplication;
 use App\Models\JobPosting;
 use App\Services\CvStorage;
@@ -12,9 +13,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Throwable;
 
-class StoreJobApplicationController extends Controller
+class JobApplicationController extends Controller
 {
-    public function __invoke(StoreJobApplicationRequest $request, int $job, CvStorage $storage): JsonResponse
+    public function store(StoreJobApplicationRequest $request, int $job, CvStorage $storage): JsonResponse
     {
         $posting = JobPosting::findOrFail($job);
         $this->ensureOpen($posting);

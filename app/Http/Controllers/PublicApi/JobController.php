@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\PublicApi;
 
-use App\Http\Resources\JobPostingResource;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\Job\JobPostingResource;
 use App\Models\JobPosting;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-class PublicJobPostingController extends Controller
+class JobController extends Controller
 {
-    public function __invoke(Request $request, int $job): JsonResponse
+    public function show(Request $request, int $job): JsonResponse
     {
         $job = JobPosting::whereHas('company', fn ($query) => $query->where('status', 'active'))
             ->with(['skills', 'company.industry'])->findOrFail($job);

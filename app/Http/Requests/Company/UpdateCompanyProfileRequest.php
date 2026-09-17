@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Company;
 
-use App\Models\AccountCompanyInfo;
 use App\Rules\UniqueCompanyName;
 use Closure;
 use Illuminate\Foundation\Http\FormRequest;
@@ -10,11 +9,6 @@ use Illuminate\Validation\Rule;
 
 class UpdateCompanyProfileRequest extends FormRequest
 {
-    public function authorize(): bool
-    {
-        return $this->user() instanceof AccountCompanyInfo && $this->user()->status === 'active';
-    }
-
     protected function prepareForValidation(): void
     {
         $values = [];

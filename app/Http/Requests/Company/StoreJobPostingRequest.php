@@ -1,18 +1,12 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Company;
 
-use App\Models\AccountCompanyInfo;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class StoreJobPostingRequest extends FormRequest
 {
-    public function authorize(): bool
-    {
-        return $this->user() instanceof AccountCompanyInfo && $this->user()->status === 'active';
-    }
-
     public function rules(): array
     {
         return [

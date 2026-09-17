@@ -1,60 +1,12 @@
 <?php
 
-use App\Http\Controllers\Auth\ApplicantSessionController;
-use App\Http\Controllers\Auth\ChangeCompanyPasswordController;
-use App\Http\Controllers\Auth\LoginCompanyController;
-use App\Http\Controllers\Auth\RegisterApplicantController;
-use App\Http\Controllers\Auth\RegisterCompanyController;
-use App\Http\Controllers\CompanyCatalogController;
-use App\Http\Controllers\CompanyJobPostingController;
-use App\Http\Controllers\CompanyProfileController;
-use App\Http\Controllers\PublicCompanyController;
-use App\Http\Controllers\PublicJobPostingController;
-use App\Http\Controllers\StoreJobApplicationController;
-use App\Http\Controllers\StoreJobPostingController;
-use App\Http\Controllers\TopEmployerController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/auth/register', RegisterApplicantController::class)
-    ->middleware('throttle:5,1')
-    ->name('auth.register');
+require __DIR__.'/api/public.php';
+require __DIR__.'/api/auth.php';
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::middleware(['auth:sanctum', 'applicant'])
+    ->group(__DIR__.'/api/applicant.php');
 
-Route::post('/auth/login', [ApplicantSessionController::class, 'store'])
-    ->middleware('throttle:5,1')->name('auth.login');
-
-Route::middleware('auth:sanctum')->group(function (): void {
-    Route::post('/auth/logout', [ApplicantSessionController::class, 'destroy'])->name('auth.logout');
-    Route::get('/auth/account', [ApplicantSessionController::class, 'show'])->name('auth.account');
-});
-
-Route::post('/auth/register-company', RegisterCompanyController::class)
-    ->middleware('throttle:5,1,company-register')->name('auth.register-company');
-
-Route::post('/auth/login-company', LoginCompanyController::class)
-    ->middleware('throttle:5,1,company-login')->name('auth.login-company');
-
-Route::middleware('auth:sanctum')->group(function (): void {
-    Route::put('/company/password', ChangeCompanyPasswordController::class)->middleware('throttle:5,1');
-    Route::get('/company/all-job', CompanyJobPostingController::class);
-    Route::get('/company/profile', [CompanyProfileController::class, 'show']);
-    Route::put('/company/profile', [CompanyProfileController::class, 'update']);
-});
-
-Route::get('/industry', [CompanyCatalogController::class, 'industries']);
-Route::get('/skill', [CompanyCatalogController::class, 'skills']);
-
-Route::post('/job', StoreJobPostingController::class)->middleware(['auth:sanctum', 'throttle:10,1']);
-
-Route::get('/company/top-employers', TopEmployerController::class);
-
-Route::get('/company/{slug}', PublicCompanyController::class)->where('slug', '[a-z0-9-]+');
-
-Route::get('/job/{job}', PublicJobPostingController::class)->whereNumber('job');
-
-Route::post('/application/{job}', StoreJobApplicationController::class)
-    ->whereNumber('job')->middleware(['auth:sanctum', 'throttle:5,1']);
+Route::middleware(['auth:sanctum', 'company'])
+    ->group(__DIR__.'/api/company.php');

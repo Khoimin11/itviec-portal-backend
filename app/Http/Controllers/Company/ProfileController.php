@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Company;
 
-use App\Http\Requests\UpdateCompanyProfileRequest;
-use App\Http\Resources\CompanyProfileResource;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Company\UpdateCompanyProfileRequest;
+use App\Http\Resources\Company\CompanyProfileResource;
 use App\Models\AccountCompanyInfo;
 use App\Services\CompanyLogoStorage;
 use App\Support\RichText;
@@ -14,16 +15,16 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
 
-class CompanyProfileController extends Controller
+class ProfileController extends Controller
 {
     public function show(Request $request): JsonResponse
     {
-        return $this->response($this->company($request));
+        return $this->response($request->user());
     }
 
     public function update(UpdateCompanyProfileRequest $request, CompanyLogoStorage $logos): JsonResponse
     {
-        $company = $this->company($request);
+        $company = $request->user();
         $data = $request->validated();
         $newLogo = null;
         $oldLogo = null;
@@ -66,14 +67,6 @@ class CompanyProfileController extends Controller
         $logos->delete($oldLogo);
 
         return $this->response($company, 'Cập nhật hồ sơ thành công');
-    }
-
-    private function company(Request $request): AccountCompanyInfo
-    {
-        $company = $request->user();
-        abort_unless($company instanceof AccountCompanyInfo && $company->status === 'active', 403);
-
-        return $company;
     }
 
     private function response(AccountCompanyInfo $company, string $message = ''): JsonResponse

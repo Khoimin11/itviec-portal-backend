@@ -1,18 +1,12 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Applicant;
 
-use App\Models\AccountUser;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class StoreJobApplicationRequest extends FormRequest
 {
-    public function authorize(): bool
-    {
-        return $this->user() instanceof AccountUser;
-    }
-
     public function rules(): array
     {
         return [

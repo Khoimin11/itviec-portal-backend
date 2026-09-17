@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\PublicApi;
 
-use App\Http\Resources\PublicCompanyResource;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\Company\PublicCompanyResource;
 use App\Models\AccountCompanyInfo;
 use Illuminate\Http\JsonResponse;
 
-class PublicCompanyController extends Controller
+class CompanyController extends Controller
 {
-    public function __invoke(string $slug): JsonResponse
+    public function show(string $slug): JsonResponse
     {
         $company = AccountCompanyInfo::where('slug', $slug)->where('status', 'active')
             ->with([

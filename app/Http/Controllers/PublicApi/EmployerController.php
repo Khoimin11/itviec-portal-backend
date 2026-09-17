@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\PublicApi;
 
+use App\Http\Controllers\Controller;
 use App\Models\AccountCompanyInfo;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
 
-class TopEmployerController extends Controller
+class EmployerController extends Controller
 {
-    public function __invoke(): JsonResponse
+    public function index(): JsonResponse
     {
         $companies = AccountCompanyInfo::query()
             ->where('status', 'active')

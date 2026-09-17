@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Middleware\EnsureApplicant;
+use App\Http\Middleware\EnsureCompany;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -13,6 +15,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->alias([
+            'applicant' => EnsureApplicant::class,
+            'company' => EnsureCompany::class,
+        ]);
+
         $middleware->trimStrings(except: ['currentPassword', 'newPassword', 'confirmPassword']);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

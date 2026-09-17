@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\PublicApi;
 
+use App\Http\Controllers\Controller;
 use App\Models\Industry;
 use App\Models\Skill;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class CompanyCatalogController extends Controller
+class CatalogController extends Controller
 {
     public function industries(Request $request): JsonResponse
     {

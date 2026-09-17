@@ -1,16 +1,35 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Company;
 
-use App\Http\Requests\StoreJobPostingRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Company\StoreJobPostingRequest;
+use App\Http\Resources\Job\JobPostingResource;
 use App\Models\JobPosting;
 use App\Support\RichText;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class StoreJobPostingController extends Controller
+class JobPostingController extends Controller
 {
-    public function __invoke(StoreJobPostingRequest $request): JsonResponse
+    public function index(Request $request): JsonResponse
+    {
+        $company = $request->user();
+
+        $jobs = JobPosting::where('company_id', $company->id)
+            ->with('skills')
+            ->orderByDesc('id')
+            ->get();
+
+        return response()->json([
+            'isSuccess' => true,
+            'message' => '',
+            'data' => JobPostingResource::collection($jobs),
+        ]);
+    }
+
+    public function store(StoreJobPostingRequest $request): JsonResponse
     {
         $data = $request->validated();
         $job = DB::transaction(function () use ($request, $data): JobPosting {
@@ -34,7 +53,7 @@ class StoreJobPostingController extends Controller
             ])->save();
             $job->skills()->attach($data['skillIds']);
 
-            return $job;            
+            return $job;
         });
 
         return response()->json([
