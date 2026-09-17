@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\LoginCompanyController;
 use App\Http\Controllers\Auth\RegisterApplicantController;
 use App\Http\Controllers\Auth\RegisterCompanyController;
 use App\Http\Controllers\CompanyCatalogController;
+use App\Http\Controllers\CompanyJobPostingController;
 use App\Http\Controllers\CompanyProfileController;
 use App\Http\Controllers\StoreJobPostingController;
 use Illuminate\Http\Request;
@@ -35,6 +36,7 @@ Route::post('/auth/login-company', LoginCompanyController::class)
 
 Route::middleware('auth:sanctum')->group(function (): void {
     Route::put('/company/password', ChangeCompanyPasswordController::class)->middleware('throttle:5,1');
+    Route::get('/company/all-job', CompanyJobPostingController::class);
     Route::get('/company/profile', [CompanyProfileController::class, 'show']);
     Route::put('/company/profile', [CompanyProfileController::class, 'update']);
 });
