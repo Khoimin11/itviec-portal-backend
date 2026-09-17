@@ -11,7 +11,7 @@ use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Validator;
 use Throwable;
 
 class CompanyProfileController extends Controller
@@ -57,9 +57,8 @@ class CompanyProfileController extends Controller
             });
         } catch (Throwable $exception) {
             $logos->delete($newLogo);
-            if ($exception instanceof UniqueConstraintViolationException
-                && AccountCompanyInfo::where('email', $data['email'])->where('id', '!=', $company->id)->exists()) {
-                throw ValidationException::withMessages(['email' => 'Email đã được đăng ký cho tài khoản công ty khác.']);
+            if ($exception instanceof UniqueConstraintViolationException) {
+                Validator::make($data, $request->rules(), $request->messages(), $request->attributes())->validate();
             }
             throw $exception;
         }

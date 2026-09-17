@@ -9,8 +9,8 @@ use App\Notifications\CompanyRegistered;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Illuminate\Validation\ValidationException;
 
 class RegisterCompanyController extends Controller
 {
@@ -38,11 +38,8 @@ class RegisterCompanyController extends Controller
                 $company->notify(new CompanyRegistered($password));
             });
         } catch (UniqueConstraintViolationException $exception) {
-            if (! AccountCompanyInfo::where('email', $data['email'])->exists()) {
-                throw $exception;
-            }
-
-            throw ValidationException::withMessages(['email' => 'Email đã được đăng ký cho tài khoản công ty.']);
+            Validator::make($data, $request->rules(), $request->messages(), $request->attributes())->validate();
+            throw $exception;
         }
 
         return response()->json([

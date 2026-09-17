@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\AccountCompanyInfo;
+use App\Rules\UniqueCompanyName;
 use Closure;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -44,7 +45,7 @@ class UpdateCompanyProfileRequest extends FormRequest
             'position' => ['required', 'string', 'min:3', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique('accounts_company_info', 'email')->ignore($this->user()->id)],
             'phoneNumber' => ['required', 'string', 'regex:/^0[1-9][0-9]{8,9}$/'],
-            'companyName' => ['required', 'string', 'min:4', 'max:255'],
+            'companyName' => ['bail', 'required', 'string', 'min:4', 'max:255', new UniqueCompanyName($this->user()->id)],
             'location' => ['required', Rule::in(['Ho Chi Minh', 'Ha Noi', 'Da Nang', 'Others'])],
             'website' => ['nullable', 'url:http,https', 'max:255'],
             'tagline' => ['nullable', 'string', 'max:255'],

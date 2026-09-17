@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 
 #[Fillable(['contact_name', 'position', 'email', 'phone_number', 'source', 'company_name', 'location', 'website', 'status', 'terms_accepted_at', 'password'])]
@@ -32,6 +33,16 @@ class AccountCompanyInfo extends Authenticatable
     public function skills(): BelongsToMany
     {
         return $this->belongsToMany(Skill::class, 'company_skill', 'company_id', 'skill_id');
+    }
+
+    protected static function booted(): void
+    {
+        static::saving(function (self $company): void {
+            if ($company->isDirty('company_name') || ! $company->slug) {
+                $company->company_name = trim($company->company_name);
+                $company->slug = Str::slug($company->company_name);
+            }
+        });
     }
 
     protected function casts(): array

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Rules\UniqueCompanyName;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -30,7 +31,7 @@ class RegisterCompanyRequest extends FormRequest
             'email' => ['bail', 'required', 'string', 'email', 'max:255', Rule::unique('accounts_company_info', 'email')],
             'phoneNumber' => ['required', 'string', 'regex:/^0[1-9][0-9]{8,9}$/'],
             'source' => ['nullable', 'string', 'max:255'],
-            'companyName' => ['required', 'string', 'min:4', 'max:255'],
+            'companyName' => ['bail', 'required', 'string', 'min:4', 'max:255', new UniqueCompanyName],
             'location' => ['required', Rule::in(['Ho Chi Minh', 'Ha Noi', 'Da Nang', 'Others'])],
             'website' => ['nullable', 'string', 'max:2048', 'url:http,https'],
             'termsAccepted' => ['required', 'accepted'],

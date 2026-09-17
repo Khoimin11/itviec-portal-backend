@@ -12,7 +12,7 @@ class TopEmployerController extends Controller
     {
         $companies = AccountCompanyInfo::query()
             ->where('status', 'active')
-            ->has('jobPostings', '>', 1)
+            ->has('jobPostings', '>=', 1)
             ->withCount('jobPostings')
             ->with('skills:id,name')
             ->orderByDesc('job_postings_count')
@@ -24,6 +24,7 @@ class TopEmployerController extends Controller
             'message' => '',
             'data' => $companies->map(fn (AccountCompanyInfo $company) => [
                 'id' => $company->id,
+                'slug' => $company->slug,
                 'companyName' => $company->company_name,
                 'location' => $company->location,
                 'logo' => $company->logo_url ?: ($company->logo_path ? Storage::disk('public')->url($company->logo_path) : ''),
