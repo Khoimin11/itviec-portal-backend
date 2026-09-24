@@ -1,12 +1,14 @@
 <?php
 
 use App\Http\Controllers\Auth\CompanyAuthController;
+use App\Http\Controllers\Company\DashboardController;
 use App\Http\Controllers\Company\JobApplicationController;
 use App\Http\Controllers\Company\JobPostingController;
 use App\Http\Controllers\Company\ProfileController as CompanyProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('company')->group(function (): void {
+    Route::get('/dashboard', [DashboardController::class, 'show']);
     Route::put('/password', [CompanyAuthController::class, 'changePassword'])->middleware('throttle:5,1');
     Route::get('/applications/{application}', [JobApplicationController::class, 'show'])->whereNumber('application');
     Route::get('/all-cv', [JobApplicationController::class, 'index']);
